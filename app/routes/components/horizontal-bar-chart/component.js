@@ -31,15 +31,12 @@ export default Component.extend({
 
       // set up SVG
       // TODO make chart responsive
-      const width = 960;
-      const height = 500;
-      const margin = { top: 20, right: 20, bottom: 30, left: 80 };
       const element = select($("#horizontal-chart")[0]);
-      const svg = element
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .style("overflow", "visible");
+      const svg = select($("#horizontal-bar-chart")[0]);
+      const domRect = svg.node().getBoundingClientRect();
+      const margin = { top: 20, right: 20, bottom: 30, left: 80 };
+      const width = domRect.width;
+      const height = domRect.height;
 
       const g = svg
       .append("g")
