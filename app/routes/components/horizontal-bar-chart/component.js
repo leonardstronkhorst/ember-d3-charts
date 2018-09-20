@@ -28,9 +28,20 @@ export default Component.extend({
       },
 
     didInsertElement() {
+      this.set('transition', transition().duration(1500));
+      this.set('xScale', scaleLinear());
+      this.set('yScale', scaleBand().padding(0.1));
+      this.set('yAxis', axisLeft());
+      this.set('xAxis', axisBottom());
 
+      this.renderChart();
+    },
+    getTicksCount(maxValue) {
+      return Math.min(maxValue,5);
+    },
+    renderChart() {
       // set up SVG
-      // TODO make chart responsive
+      // TODO: make chart responsive
       const element = select($("#horizontal-chart")[0]);
       const svg = select($("#horizontal-bar-chart")[0]);
       const domRect = svg.node().getBoundingClientRect();
@@ -43,40 +54,36 @@ export default Component.extend({
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       // set up animation transition
-      const t = transition().duration(1500);
+      const transition = this.get('transition');
 
       /*******************************************
        * Get data
        *******************************************/
       let data = this.get('data');
 
-      const getTicksCount = maxValue => {
-      return Math.min(maxValue,5);
-      };
-
       /*******************************************
        * Scales
        *******************************************/
-      const xScale = scaleLinear()
+      let xScale = this.get('xScale')
       .domain([0, data.numberOfUniqueAnswers])
       .range([0, width - margin.left - margin.right]);
 
-      const yScale = scaleBand()
+      let yScale = this.get('yScale')
       .domain(data.labels)
       .range([height - margin.top - margin.bottom, 0])
-      .padding(0.1);
+      
 
       /*******************************************
        * Axis
        *******************************************/
-      const yAxis = axisLeft().scale(yScale);
+      let yAxis = this.get('yAxis').scale(yScale);
       g.append("g")
       .attr("transform", `translate(0,0)`)
       .classed("y-axis", true)
       .call(yAxis);
 
-      const xAxis = axisBottom()
-      .ticks(getTicksCount(data.numberOfUniqueAnswers))
+      let xAxis = this.get('xAxis')
+      .ticks(this.getTicksCount(data.numberOfUniqueAnswers))
       .tickSizeInner([-(height - margin.top - margin.bottom)])
       .scale(xScale);
 
@@ -103,7 +110,7 @@ export default Component.extend({
       .attr("width", 0);
 
       svg.selectAll(".bar")
-      .transition(t)
+      .transition(transition)
       .attr("width", d => xScale(d));
 
       /*******************************************
@@ -114,6 +121,7 @@ export default Component.extend({
       rect
       .on("mousemove", (d, i) => {
           const percentace = (d * 100) / data.numberOfUniqueAnswers;
+          // TODO: let ember handle the state
           let hover = select($('#hover')[0]);
           hover
           .style("left", `${currentEvent.pageX - 50}px`)
@@ -140,6 +148,7 @@ export default Component.extend({
       .attr("x", d => xScale(d) / 2 + 2)
       .attr("y", (d, i) => yScale(data.labels[i]) + margin.bottom + margin.top - 5)
       .text(d => d);
-
+    
     }
+
   });
