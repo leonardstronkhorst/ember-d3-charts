@@ -1,0 +1,17 @@
+#horizontal-chart {
+    // width: 700px;
+    height: 500px;
+    #hover {
+        position: absolute;
+        background: #80CBC4;
+        color:#000;
+        padding: 5px;
+        max-width: 200px;
+        border: 1px solid #fff;
+        display: none;
+    
+        .display {
+            display: inline-block;
+        }
+    }
+}

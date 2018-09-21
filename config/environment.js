@@ -4,6 +4,7 @@
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'd3-run',
+    podModulePrefix: 'd3-run/routes',
     environment,
     rootURL: '/',
     locationType: 'auto',
